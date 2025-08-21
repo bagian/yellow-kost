@@ -67,14 +67,18 @@
       </button>
       <!-- Hamburger Toggle BTN -->
 
-      <a href="index.html" class="lg:hidden">
+      <!-- Logo -->
+      <div class="dark:text-white">Yellow Kost</div>
+
+
+      {{-- <a href="index.html" class="lg:hidden">
         <img class="dark:hidden" src="./images/logo/logo.svg" alt="Logo" />
         <img
           class="hidden dark:block"
           src="./images/logo/logo-dark.svg"
           alt="Logo"
         />
-      </a>
+      </a> --}}
 
       <!-- Application nav menu button -->
       <button
@@ -100,7 +104,7 @@
       </button>
       <!-- Application nav menu button -->
 
-      <div class="hidden lg:block">
+      {{-- <div class="hidden lg:block">
         <form>
           <div class="relative">
             <span class="absolute top-1/2 left-4 -translate-y-1/2">
@@ -136,7 +140,7 @@
             </button>
           </div>
         </form>
-      </div>
+      </div> --}}
     </div>
 
     <div

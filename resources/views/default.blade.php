@@ -7,7 +7,7 @@
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Dashboard - Kasir Apps</title>
+    <title>Yellow Kost</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
   </head>
   <body
@@ -39,13 +39,13 @@
 
         <!-- ===== Main Content Start ===== -->
         <main class="flex-1 p-6">
-          <div class="mb-6">
+          {{-- <div class="mb-6">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
             <span class="text-sm flex flex-row justify-between">
               <p class="text-gray-600 dark:text-gray-600">Selamat datang di Kasir Apps</p>
               <p class="text-gray-600 dark:text-gray-600">V.0.0.1</p>
             </span>
-          </div>
+          </div> --}}
 
           <!-- Metric Cards -->
           @include('partials.metric-group.metric-group-01')
