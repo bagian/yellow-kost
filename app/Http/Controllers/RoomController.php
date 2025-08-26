@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\RoomRepositoryInterface;
-use Illuminate\Http\Request;
+use App\Http\Requests\RoomRequest;
+use App\Http\Resources\RoomResource;
+use App\Repositories\Interface\RoomRepositoryInterface;
+use Illuminate\Support\Str;
 
 class RoomController extends Controller
 {
@@ -15,16 +17,22 @@ class RoomController extends Controller
     }
 
     public function index() {
-        $room = $this->roomRepository->all();
+        $room = $this->roomRepository->allWithPictures();
 
-        return $room;
+        return RoomResource::collection($room);
     }
 
-    public function store(Request $request) {
-        $room = $this->roomRepository->create($request);
+    public function store(RoomRequest $request) {
+        $data = $request->safe()->except('pictures');
+
+        $pictures = $request->file('pictures', []);
+
+        $room = $this->roomRepository->createWithPictures($data, $pictures);
+
+        return new RoomResource($room->load('pictures'));
     }
     
-    public function update(Request $request, $id) {
+    public function update(RoomRequest $request, $id) {
         $room = $this->roomRepository->update($id, $request);
     }
 

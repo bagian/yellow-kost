@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->string('room_names');
+            $table->string('room_name');
             $table->integer('price');
-            $table->string('periods')->only(['day', 'month', 'year']);
+            $table->string('period')->only(['day', 'month', 'year']);
             $table->timestamps();
         });
     }

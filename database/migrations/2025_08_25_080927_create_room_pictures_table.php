@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('room_pictures', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('id_room')->unsigned();
-            $table->string('picture');
+            $table->string('name');
+            $table->string('url');
             $table->timestamps();
 
             $table->foreign('id_room')
