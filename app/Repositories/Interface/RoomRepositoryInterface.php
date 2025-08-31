@@ -4,6 +4,7 @@ namespace App\Repositories\Interface;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\UploadedFile;
 
 interface RoomRepositoryInterface
 {
@@ -15,7 +16,7 @@ interface RoomRepositoryInterface
 
     public function create(array $data): Model;
 
-    public function createPicture($id, array $data): Model;
+    public function createPicture($id, UploadedFile $file): Model;
 
     public function createWithPictures(array $data, array $pictures): Model;
 

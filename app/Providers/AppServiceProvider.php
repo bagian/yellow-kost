@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Repositories\RoomRepository;
-use App\Repositories\RoomRepositoryInterface;
+use App\Repositories\Interface\RoomRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

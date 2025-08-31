@@ -25,8 +25,8 @@ class RoomRequest extends FormRequest
             'room_name' => ['required', 'string'],
             'price' => ['required', 'integer'],
             'period' => ['required', 'in:day,month,year'],
-            'pictures' => ['nullable', 'array'],
-            'pictures.*' => ['file', 'image', 'max:2048'],
+            'pictures' => ['nullable'],
+            'pictures.*' => ['image', 'max:2048'],
         ];
 
         return $rules;

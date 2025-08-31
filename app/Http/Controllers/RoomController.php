@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RoomRequest;
 use App\Http\Resources\RoomResource;
 use App\Repositories\Interface\RoomRepositoryInterface;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class RoomController extends Controller
@@ -20,6 +22,10 @@ class RoomController extends Controller
         $room = $this->roomRepository->allWithPictures();
 
         return RoomResource::collection($room);
+    }
+
+    public function create() {
+        return view('backend.room.create');
     }
 
     public function store(RoomRequest $request) {

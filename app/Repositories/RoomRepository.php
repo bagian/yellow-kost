@@ -9,6 +9,8 @@ use App\Repositories\Interface\RoomRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Exception;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class RoomRepository extends BaseRepository implements RoomRepositoryInterface
@@ -25,6 +27,10 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
         return $this->model::with('pictures')->all();
     }
 
+    public function getPictures($id): Collection {
+        return RoomPicture::where('id_room', $id)->get();
+    }
+
     public function find($id): Model {
         return $this->model::find($id);
     }
@@ -39,8 +45,19 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
         });
     }
 
-    public function createPicture($id, array $data): Model {
-        return $this->transaction(function() use ($id, $data) {
+    public function createPicture($id, UploadedFile $file): Model {
+        return $this->transaction(function() use ($id, $file) {
+            $folder = "ID_{$id}";
+            $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $ext = $file->getClientOriginalExtension();
+            $filename = Str::slug($name, '_') . ".$ext";
+            $path = $file->storeAs("images/rooms/{$folder}", $filename, 'public');
+
+            $data = [
+                "name" => $filename,
+                "url" => $path,
+            ];
+
             $model = new RoomPicture();
             $model->id_room = $id;
             $this->fillModel($model, $data);
@@ -55,32 +72,21 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
             $room = $this->create($data);
     
             if (!empty($pictures)) {
-                $folder = Str::slug($room->room_name, '_');
-    
-                foreach ($pictures as $file) {
-                    $filename = $file->getClientOriginalName();
-                    $path = $file->storeAs("rooms/{$folder}", $filename, 'public');
-    
-                    $this->createPicture($room->id, [
-                        'name' => $filename,
-                        'url' => $path,
-                    ]);
+
+                foreach ($pictures as $file) {    
+                    $this->createPicture($room->id, $file);
                 }
-    
+
                 $room->load('pictures');
             }
-    
+
             return $room;
         });
     }    
 
     public function update($id, array $data): Model {
         return $this->transaction(function() use ($data, $id): Model {
-            $model = $this->model::find($id);
-
-            if (!$model) {
-                throw new Exception("Model not found");
-            }
+            $model = $this->model::findOrFail($id);
     
             $model = $this->fillModel($model, $data);
             $model->save();
@@ -90,22 +96,26 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
     }
 
     public function delete($id): Model {
-        $model = $this->model::find($id);
+        $model = $this->model::findOrFail($id);
 
-        if (!$model) {
-            throw new Exception("Model not found");
+        $pictures = RoomPicture::where('id_room', $id)->get();
+
+        foreach ($pictures as $row) {
+            $picture = $this->deletePicture($row->id);
         }
 
         $model->delete();
+
+        $model->deleted_pictures = $pictures;
 
         return $model;
     }
 
     public function deletePicture($id): Model {
-        $model = RoomPicture::find($id);
+        $model = RoomPicture::findOrFail($id);
 
-        if (!$model) {
-            throw new Exception("Model not found");
+        if ($model->url && Storage::disk('public')->exists($model->url)) {
+            Storage::disk('public')->delete($model->url);
         }
 
         $model->delete();
